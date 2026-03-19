@@ -12,6 +12,18 @@ services:
         depends_on:
             keycloak:
                 condition: service_started
+            chat:
+                condition: service_started
+
+    chat:
+        build:
+            context: ./chat-server
+        container_name: buehl-chat-server
+        environment:
+            PORT: 3000
+            CHAT_ALLOWED_ORIGIN: http://localhost:8080
+        ports:
+            - '8082:3000'
 
     keycloak:
         image: quay.io/keycloak/keycloak:26.1.3

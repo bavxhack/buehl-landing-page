@@ -5,7 +5,7 @@
 {% block body %}
     <main class="relative overflow-hidden">
         <div class="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-gradient-to-br from-cyan-100 via-slate-50 to-violet-100 blur-3xl"></div>
-        <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:px-8">
+        <div class="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10 lg:px-8">
             <header class="mb-12 flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-white p-8 xl:flex-row xl:items-center xl:justify-between">
                 <div class="max-w-2xl space-y-4">
                     {% if header.logo is defined and header.logo %}
@@ -56,48 +56,321 @@
                 </div>
             </header>
 
-            <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {% for link in links %}
-                    <a
-                        href="{{ link.url }}"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        class="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 transition duration-200 hover:border-slate-300 hover:bg-slate-50"
-                    >
-                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ link.color }}"></div>
-                        <div class="flex h-full flex-col justify-between gap-10">
-                            <div class="space-y-4">
-                                <div class="inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 transition group-hover:border-slate-300 group-hover:bg-white">
-                                    {% if link.image is defined and link.image %}
-                                        <img
-                                            src="{{ link.image }}"
-                                            alt="{{ link.text }} Logo"
-                                            class="h-full w-full rounded-xl object-contain"
-                                            loading="lazy"
-                                        >
-                                    {% elseif link.icon is defined and link.icon %}
-                                        {{ app_icon(link.icon)|raw }}
-                                    {% endif %}
+            <section class="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(22rem,26rem)]">
+                <div>
+                    <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+                        {% for link in links %}
+                            <a
+                                href="{{ link.url }}"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                class="group relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 transition duration-200 hover:border-slate-300 hover:bg-slate-50"
+                            >
+                                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r {{ link.color }}"></div>
+                                <div class="flex h-full flex-col justify-between gap-10">
+                                    <div class="space-y-4">
+                                        <div class="inline-flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 transition group-hover:border-slate-300 group-hover:bg-white">
+                                            {% if link.image is defined and link.image %}
+                                                <img
+                                                    src="{{ link.image }}"
+                                                    alt="{{ link.text }} Logo"
+                                                    class="h-full w-full rounded-xl object-contain"
+                                                    loading="lazy"
+                                                >
+                                            {% elseif link.icon is defined and link.icon %}
+                                                {{ app_icon(link.icon)|raw }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="space-y-2">
+                                            <h2 class="text-xl font-semibold text-slate-950">{{ link.text }}</h2>
+                                            <p class="text-sm leading-6 text-slate-500">
+                                                {{ link.url }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition group-hover:text-slate-950">
+                                        Link öffnen
+                                        <span aria-hidden="true">→</span>
+                                    </div>
                                 </div>
-                                <div class="space-y-2">
-                                    <h2 class="text-xl font-semibold text-slate-950">{{ link.text }}</h2>
-                                    <p class="text-sm leading-6 text-slate-500">
-                                        {{ link.url }}
-                                    </p>
-                                </div>
+                            </a>
+                        {% else %}
+                            <div class="rounded-[2rem] border border-dashed border-slate-300 bg-white p-8 text-slate-600 md:col-span-2 xl:col-span-2">
+                                Keine Links konfiguriert. Ergänze Einträge in <code>config/packages/app_links.yaml</code>.
                             </div>
-                            <div class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition group-hover:text-slate-950">
-                                Link öffnen
-                                <span aria-hidden="true">→</span>
-                            </div>
+                        {% endfor %}
+                    </section>
+                </div>
+
+                <aside class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm" data-chat-root>
+                    <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                        <div>
+                            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-700">Live-Chat</p>
+                            <h2 class="mt-2 text-2xl font-semibold text-slate-950">Direkt schreiben, solange ihr online seid</h2>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">
+                                Die Namen kommen aus Keycloak. Nachrichten werden nicht gespeichert und verschwinden nach dem Schließen der Sitzung.
+                            </p>
                         </div>
-                    </a>
-                {% else %}
-                    <div class="rounded-[2rem] border border-dashed border-slate-300 bg-white p-8 text-slate-600 md:col-span-2 xl:col-span-3">
-                        Keine Links konfiguriert. Ergänze Einträge in <code>config/packages/app_links.yaml</code>.
+                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                            <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                            Online
+                        </span>
                     </div>
-                {% endfor %}
+
+                    <div class="mt-5 grid gap-5 lg:grid-cols-[11rem_minmax(0,1fr)]">
+                        <section>
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-semibold text-slate-900">Verfügbare Nutzer</h3>
+                                <span class="text-xs text-slate-400" data-online-count>0 online</span>
+                            </div>
+                            <ul class="mt-3 space-y-2" data-user-list>
+                                <li class="rounded-2xl border border-dashed border-slate-200 px-3 py-4 text-sm text-slate-400">
+                                    Warte auf weitere Nutzer …
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="flex min-h-[28rem] flex-col rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
+                            <div class="flex items-center justify-between gap-3 border-b border-slate-200 pb-4">
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Aktiver Chat</p>
+                                    <p class="mt-1 text-base font-semibold text-slate-950" data-active-chat-name>Noch niemand ausgewählt</p>
+                                </div>
+                                <span class="hidden items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700" data-active-chat-status>
+                                    <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                                    Online
+                                </span>
+                            </div>
+
+                            <div class="mt-4 flex-1 space-y-3 overflow-y-auto pr-1" data-message-list>
+                                <div class="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-5 text-sm leading-6 text-slate-500">
+                                    Wähle links einen Online-Kontakt aus, um direkt loszuschreiben.
+                                </div>
+                            </div>
+
+                            <form class="mt-4 flex gap-3" data-message-form>
+                                <label class="sr-only" for="chat-message">Nachricht</label>
+                                <input
+                                    id="chat-message"
+                                    name="message"
+                                    type="text"
+                                    maxlength="1000"
+                                    placeholder="Kurze Nachricht schreiben …"
+                                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100"
+                                    disabled
+                                >
+                                <button
+                                    type="submit"
+                                    class="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                    disabled
+                                >
+                                    Senden
+                                </button>
+                            </form>
+                            <p class="mt-3 text-xs text-slate-400" data-chat-status>
+                                Verbinde mit dem Live-Chat …
+                            </p>
+                        </section>
+                    </div>
+                </aside>
             </section>
         </div>
     </main>
+
+    <script src="{{ chatServerUrl }}/socket.io/socket.io.js"></script>
+    <script>
+        (() => {
+            const chatRoot = document.querySelector('[data-chat-root]');
+            if (!chatRoot || typeof window.io !== 'function') {
+                return;
+            }
+
+            const currentUser = {{ chatUser|json_encode|raw }};
+            const messageThreads = new Map();
+            let onlineUsers = [];
+            let activeChatSocketId = null;
+
+            const userList = chatRoot.querySelector('[data-user-list]');
+            const onlineCount = chatRoot.querySelector('[data-online-count]');
+            const activeChatName = chatRoot.querySelector('[data-active-chat-name]');
+            const activeChatStatus = chatRoot.querySelector('[data-active-chat-status]');
+            const messageList = chatRoot.querySelector('[data-message-list]');
+            const messageForm = chatRoot.querySelector('[data-message-form]');
+            const messageInput = messageForm.querySelector('input[name="message"]');
+            const messageButton = messageForm.querySelector('button[type="submit"]');
+            const chatStatus = chatRoot.querySelector('[data-chat-status]');
+
+            const socket = window.io('{{ chatServerUrl }}', {
+                transports: ['websocket', 'polling'],
+                auth: currentUser,
+            });
+
+            const escapeHtml = (value) => String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+
+            const getActiveChatUser = () => onlineUsers.find((user) => user.socketId === activeChatSocketId) ?? null;
+
+            const renderUsers = () => {
+                const contacts = onlineUsers.filter((user) => user.userId !== currentUser.userId);
+                onlineCount.textContent = `${contacts.length} online`;
+
+                if (!contacts.length) {
+                    userList.innerHTML = `
+                        <li class="rounded-2xl border border-dashed border-slate-200 px-3 py-4 text-sm text-slate-400">
+                            Aktuell ist kein anderer Nutzer online.
+                        </li>
+                    `;
+
+                    if (activeChatSocketId) {
+                        activeChatSocketId = null;
+                        renderMessages();
+                    }
+                    return;
+                }
+
+                if (!contacts.some((user) => user.socketId === activeChatSocketId)) {
+                    activeChatSocketId = contacts[0].socketId;
+                }
+
+                userList.innerHTML = contacts.map((user) => {
+                    const isActive = user.socketId === activeChatSocketId;
+                    return `
+                        <li>
+                            <button
+                                type="button"
+                                data-socket-id="${escapeHtml(user.socketId)}"
+                                class="flex w-full items-center justify-between gap-3 rounded-2xl border px-3 py-3 text-left transition ${isActive ? 'border-cyan-300 bg-cyan-50' : 'border-slate-200 bg-white hover:border-slate-300'}"
+                            >
+                                <span class="min-w-0">
+                                    <span class="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                                        <span class="truncate">${escapeHtml(user.name)}</span>
+                                    </span>
+                                    <span class="mt-1 block truncate text-xs text-slate-400">${escapeHtml(user.email || user.userId)}</span>
+                                </span>
+                            </button>
+                        </li>
+                    `;
+                }).join('');
+            };
+
+            const renderMessages = () => {
+                const activeUser = getActiveChatUser();
+                const messages = activeChatSocketId ? (messageThreads.get(activeChatSocketId) ?? []) : [];
+
+                if (!activeUser) {
+                    activeChatName.textContent = 'Noch niemand ausgewählt';
+                    activeChatStatus.classList.add('hidden');
+                    activeChatStatus.classList.remove('inline-flex');
+                    messageInput.disabled = true;
+                    messageButton.disabled = true;
+                    messageList.innerHTML = `
+                        <div class="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-5 text-sm leading-6 text-slate-500">
+                            Wähle links einen Online-Kontakt aus, um direkt loszuschreiben.
+                        </div>
+                    `;
+                    return;
+                }
+
+                activeChatName.textContent = activeUser.name;
+                activeChatStatus.classList.remove('hidden');
+                activeChatStatus.classList.add('inline-flex');
+                messageInput.disabled = false;
+                messageButton.disabled = false;
+
+                if (!messages.length) {
+                    messageList.innerHTML = `
+                        <div class="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-5 text-sm leading-6 text-slate-500">
+                            Noch keine Nachrichten mit ${escapeHtml(activeUser.name)}. Schreib einfach los.
+                        </div>
+                    `;
+                    return;
+                }
+
+                messageList.innerHTML = messages.map((message) => {
+                    const isOwnMessage = message.from.userId === currentUser.userId && message.from.socketId === socket.id;
+                    return `
+                        <div class="flex ${isOwnMessage ? 'justify-end' : 'justify-start'}">
+                            <article class="max-w-[85%] rounded-2xl px-4 py-3 ${isOwnMessage ? 'bg-slate-900 text-white' : 'border border-slate-200 bg-white text-slate-900'}">
+                                <p class="text-xs font-semibold uppercase tracking-[0.16em] ${isOwnMessage ? 'text-slate-300' : 'text-slate-400'}">${escapeHtml(isOwnMessage ? 'Du' : message.from.name)}</p>
+                                <p class="mt-2 text-sm leading-6">${escapeHtml(message.text)}</p>
+                            </article>
+                        </div>
+                    `;
+                }).join('');
+
+                messageList.scrollTop = messageList.scrollHeight;
+            };
+
+            userList.addEventListener('click', (event) => {
+                const button = event.target.closest('button[data-socket-id]');
+                if (!button) {
+                    return;
+                }
+
+                activeChatSocketId = button.dataset.socketId;
+                renderUsers();
+                renderMessages();
+            });
+
+            messageForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const text = messageInput.value.trim();
+
+                if (!text || !activeChatSocketId) {
+                    return;
+                }
+
+                socket.emit('chat:private-message', {
+                    recipientSocketId: activeChatSocketId,
+                    text,
+                });
+
+                messageInput.value = '';
+                messageInput.focus();
+            });
+
+            socket.on('connect', () => {
+                chatStatus.textContent = `Verbunden als ${currentUser.name}. Nachrichten werden nur live angezeigt.`;
+            });
+
+            socket.on('disconnect', () => {
+                chatStatus.textContent = 'Die Verbindung zum Live-Chat wurde getrennt.';
+                onlineUsers = [];
+                renderUsers();
+                renderMessages();
+            });
+
+            socket.on('chat:error', (message) => {
+                chatStatus.textContent = message;
+            });
+
+            socket.on('presence:update', (users) => {
+                onlineUsers = Array.isArray(users) ? users : [];
+                chatStatus.textContent = `Aktualisiert: ${onlineUsers.filter((user) => user.userId !== currentUser.userId).length} weitere Nutzer online.`;
+                renderUsers();
+                renderMessages();
+            });
+
+            socket.on('chat:private-message', (message) => {
+                const partnerSocketId = message.from.userId === currentUser.userId && message.from.socketId === socket.id
+                    ? message.to.socketId
+                    : message.from.socketId;
+
+                const thread = messageThreads.get(partnerSocketId) ?? [];
+                thread.push(message);
+                messageThreads.set(partnerSocketId, thread);
+
+                if (!activeChatSocketId) {
+                    activeChatSocketId = partnerSocketId;
+                }
+
+                renderMessages();
+            });
+        })();
+    </script>
 {% endblock %}

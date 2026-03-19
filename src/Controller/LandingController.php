@@ -16,6 +16,8 @@ class LandingController extends AbstractController
         private readonly array $landingLinks,
         #[Autowire('%app.landing_header%')]
         private readonly array $landingHeader,
+        #[Autowire('%env(CHAT_SERVER_URL)%')]
+        private readonly string $chatServerUrl,
     ) {
     }
 
@@ -29,6 +31,8 @@ class LandingController extends AbstractController
             'links' => $this->landingLinks,
             'user' => $user,
             'personalGreeting' => $this->buildPersonalGreeting($user),
+            'chatServerUrl' => rtrim($this->chatServerUrl, '/'),
+            'chatUser' => $this->buildChatUser($user),
         ]);
     }
 
@@ -49,5 +53,29 @@ class LandingController extends AbstractController
         };
 
         return sprintf('%s, %s!', $salutation, $name);
+    }
+
+    /**
+     * @return array{userId:string,name:string,email:string}
+     */
+    private function buildChatUser(?UserInterface $user): array
+    {
+        if (!$user instanceof UserInterface) {
+            return [
+                'userId' => 'anonymous',
+                'name' => 'Unbekannt',
+                'email' => '',
+            ];
+        }
+
+        $name = $user instanceof KeycloakUser && '' !== trim($user->getDisplayName())
+            ? $user->getDisplayName()
+            : $user->getUserIdentifier();
+
+        return [
+            'userId' => $user->getUserIdentifier(),
+            'name' => $name,
+            'email' => $user instanceof KeycloakUser ? $user->getEmail() : '',
+        ];
     }
 }

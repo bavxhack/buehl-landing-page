@@ -10,7 +10,8 @@ Eine kleine Symfony-Anwendung, die nach erfolgreicher Keycloak-Anmeldung eine he
 - **Keycloak/OpenID-Connect Login** vor der Startseite
 - **Keycloak-Logout** inklusive Abmeldung aus der Keycloak-Session
 - **Twig + TailwindCSS** für ein modernes, freundliches UI
-- **Docker Compose** startet App und Keycloak gemeinsam
+- **Docker Compose** startet App, Socket.IO-Chat und Keycloak gemeinsam
+- **Live-Chat mit Präsenzanzeige** über einen zweiten Node.js-Container und Socket.IO
 
 ## Schnellstart
 
@@ -24,12 +25,27 @@ Danach sind die Dienste erreichbar unter:
 
 - Landingpage: <http://localhost:8080>
 - Keycloak: <http://localhost:8081>
+- Chat-Server (Socket.IO): <http://localhost:8082>
 
 ### Demo-Login
 
 - Benutzername: `demo`
 - Passwort: `demo`
 - Keycloak Admin: `admin` / `admin`
+
+
+## Live-Chat
+
+Rechts auf der Landingpage gibt es einen kleinen Live-Chat. Die angezeigten Namen stammen direkt aus dem Keycloak-Login. Andere angemeldete Nutzer erscheinen mit grünem Statuspunkt in der Online-Liste.
+
+Eigenschaften:
+
+- **Direktnachrichten an gerade online befindliche Nutzer**
+- **Keine Persistenz**: Nachrichten werden nicht in Datenbank oder Dateien gespeichert
+- **Ephemeres Verhalten**: Nach einem Reload bzw. Schließen der Sitzung ist der lokale Verlauf weg
+- **Separater Node.js-Container** mit Socket.IO für Präsenz und Nachrichtenaustausch
+
+Die Frontend-Anwendung verbindet sich dabei mit `CHAT_SERVER_URL` (Standard: `http://localhost:8082`).
 
 ## Landingpage konfigurieren
 
@@ -88,6 +104,7 @@ Die Keycloak-Verbindung ist in `.env` vorbelegt und passt zu `docker-compose.yml
 - `KEYCLOAK_CLIENT_ID`
 - `KEYCLOAK_CLIENT_SECRET`
 - `KEYCLOAK_REDIRECT_URI`
+- `CHAT_SERVER_URL`
 
 ## Lokale Entwicklung ohne Docker
 
